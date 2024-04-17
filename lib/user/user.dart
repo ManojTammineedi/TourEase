@@ -5,15 +5,18 @@ class User_Profile {
   String phone;
   String aboutMeDescription;
   bool isGuide;
+  bool booking;
 
   // Constructor
-  User_Profile(
-      {required this.image,
-      required this.name,
-      required this.email,
-      required this.phone,
-      required this.aboutMeDescription,
-      required this.isGuide});
+  User_Profile({
+    required this.image,
+    required this.name,
+    required this.email,
+    required this.phone,
+    required this.aboutMeDescription,
+    required this.isGuide,
+    required this.booking,
+  });
 
   User_Profile copy({
     String? imagePath,
@@ -21,6 +24,7 @@ class User_Profile {
     String? phone,
     String? email,
     String? about,
+    required bool booking,
   }) =>
       User_Profile(
         image: imagePath ?? this.image,
@@ -28,16 +32,21 @@ class User_Profile {
         email: email ?? this.email,
         phone: phone ?? this.phone,
         aboutMeDescription: about ?? this.aboutMeDescription,
-        isGuide: isGuide ?? this.isGuide,
+        isGuide: isGuide,
+        booking: booking,
       );
 
-  static User_Profile fromJson(Map<String, dynamic> json) => User_Profile(
-      image: json['imagePath'],
-      name: json['name'],
-      email: json['email'],
-      aboutMeDescription: json['about'],
-      phone: json['phone'],
-      isGuide: json['isGuide']);
+  static User_Profile fromJson(Map<String, dynamic> json) {
+    return User_Profile(
+      image: json['imagePath'] ?? '', // Provide a default value if it's null
+      name: json['name'] ?? '',
+      email: json['email'] ?? '',
+      aboutMeDescription: json['about'] ?? '',
+      phone: json['phone'] ?? '',
+      isGuide: json['isGuide'] ?? false, // Provide a default value if it's null
+      booking: json['booking'] ?? false, // Provide a default value if it's null
+    );
+  }
 
   Map<String, dynamic> toJson() => {
         'imagePath': image,
@@ -45,6 +54,7 @@ class User_Profile {
         'email': email,
         'about': aboutMeDescription,
         'phone': phone,
-        'isGuide': isGuide
+        'isGuide': isGuide,
+        'booking': booking
       };
 }

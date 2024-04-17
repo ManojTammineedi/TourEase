@@ -1,7 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:ionicons/ionicons.dart';
+
 import 'package:tourease/model/guide_profile.dart';
+import 'package:tourease/pages/Budget.dart';
 
 class Guide {
   String username;
@@ -9,8 +12,10 @@ class Guide {
   String rating;
   String email;
   String about;
+  bool booking;
 
-  Guide(this.username, this.image, this.rating, this.email, this.about);
+  Guide(this.username, this.image, this.rating, this.email, this.about,
+      this.booking);
 }
 
 class FollowingPage extends StatefulWidget {
@@ -19,6 +24,7 @@ class FollowingPage extends StatefulWidget {
 }
 
 class _FollowingPageState extends State<FollowingPage> {
+  final FirebaseAuth _auth = FirebaseAuth.instance;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -38,50 +44,103 @@ class _FollowingPageState extends State<FollowingPage> {
           icon: const Icon(Ionicons.chevron_back),
         ),
       ),
-      body: StreamBuilder<QuerySnapshot?>(
-        stream: FirebaseFirestore.instance.collection('guides').snapshots(),
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return CircularProgressIndicator();
-          } else if (snapshot.hasError) {
-            return Text('Error: ${snapshot.error}');
-          } else {
-            final users = snapshot.data!.docs.map((doc) {
-              final data = doc.data() as Map<String, dynamic>;
-              return Guide(
-                data['username'] ?? '',
-                data['image'] ?? '',
-                data['rating'] ?? '',
-                data['email'] ?? '',
-                data['about'] ?? '',
-              );
-            }).toList();
+      body: Padding(
+        padding: const EdgeInsets.all(10.0),
+        child: Column(
+          children: <Widget>[
+            Expanded(
+              child: StreamBuilder<QuerySnapshot>(
+                stream:
+                    FirebaseFirestore.instance.collection('guides').snapshots(),
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return Center(child: CircularProgressIndicator());
+                  } else if (snapshot.hasError) {
+                    return Center(child: Text('Error: ${snapshot.error}'));
+                  } else {
+                    final currentUser = _auth.currentUser;
+                    final users = snapshot.data?.docs
+                        .map((doc) {
+                          final data = doc.data() as Map<String, dynamic>;
+                          return Guide(
+                            data['username'] ?? '',
+                            data['image'] ?? '',
+                            data['rating'] ?? '',
+                            data['email'] ?? '',
+                            data['about'] ?? '',
+                            data['booking'] ?? '',
+                          );
+                        })
+                        .where((user) => user.email != currentUser?.email)
+                        .toList();
 
-            return Container(
-              padding: EdgeInsets.only(right: 20, left: 20),
-              color: Colors.white,
-              height: double.infinity,
-              width: double.infinity,
-              child: ListView.builder(
-                itemCount: users.length,
-                itemBuilder: (context, index) {
-                  return GestureDetector(
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) =>
-                              GuidesProfilePage(guide: users[index]),
-                        ),
-                      );
-                    },
-                    child: userComponent(user: users[index]),
-                  );
+                    return ListView.builder(
+                      itemCount: users?.length,
+                      itemBuilder: (context, index) {
+                        return GestureDetector(
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) =>
+                                    GuidesProfilePage(guide: users[index]),
+                              ),
+                            );
+                          },
+                          child: userComponent(user: users![index]),
+                        );
+                      },
+                    );
+                  }
                 },
               ),
-            );
-          }
-        },
+            ),
+            const Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 25.0),
+              child: Row(
+                children: [
+                  Expanded(
+                    child: Divider(
+                      thickness: 0.5,
+                      color: Colors.white,
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 10.0),
+                    child: Text(
+                      'Or continue with',
+                      style:
+                          TextStyle(color: Color.fromARGB(255, 255, 255, 255)),
+                    ),
+                  ),
+                  Expanded(
+                    child: Divider(
+                      thickness: 0.5,
+                      color: Colors.white,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.all(20.0),
+              child: ElevatedButton(
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) {
+                        return Budget();
+                      },
+                    ),
+                  );
+                  // Add the functionality for the button here
+                },
+                child: Text('Budgets Planning'),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -94,13 +153,12 @@ class _FollowingPageState extends State<FollowingPage> {
         children: [
           Row(
             children: [
-              Container(
-                width: 100,
-                height: 100,
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(30),
-                  child: Image.network(user.image),
-                ),
+              CircleAvatar(
+                radius: 30,
+
+                // borderRadius: BorderRadius.circular(30),
+
+                backgroundImage: NetworkImage(user.image),
               ),
               SizedBox(width: 10),
               Column(
@@ -121,6 +179,16 @@ class _FollowingPageState extends State<FollowingPage> {
                     user.email,
                     style: TextStyle(color: Colors.grey[600]),
                   ),
+                  SizedBox(
+                    height: 5,
+                  ),
+                  Text(
+                    user.booking ? "Not Available" : "Available",
+                    style: TextStyle(
+                      color: Colors.black,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  )
                 ],
               ),
             ],

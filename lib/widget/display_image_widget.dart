@@ -15,7 +15,7 @@ class DisplayImage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final color = Color.fromRGBO(64, 105, 225, 1);
+    final color = Color.fromARGB(255, 165, 168, 255);
 
     return Center(
         child: Stack(children: [
@@ -36,8 +36,9 @@ class DisplayImage extends StatelessWidget {
 
     return CircleAvatar(
       radius: 75,
-      backgroundColor: color,
+      // backgroundColor: color,
       child: CircleAvatar(
+        backgroundColor: Colors.white,
         backgroundImage: image as ImageProvider,
         radius: 70,
       ),

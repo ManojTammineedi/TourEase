@@ -13,6 +13,7 @@ class UserData {
     phone: 'Enter You Phone No',
     aboutMeDescription: 'Enter About Yourself',
     isGuide: false,
+    booking: false,
   );
 
   static User_Profile getUser() => myUser;

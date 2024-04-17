@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:tourease/current_location.dart';
 
 class LocationCard extends StatelessWidget {
   const LocationCard({Key? key}) : super(key: key);
@@ -12,9 +13,19 @@ class LocationCard extends StatelessWidget {
         padding: const EdgeInsets.all(10),
         child: Row(
           children: [
-            Image.asset(
-              'lib/images/map.png',
-              width: 100,
+            GestureDetector(
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) =>
+                          UserLocation()), // Navigate to NewPage()
+                );
+              },
+              child: Image.asset(
+                'lib/images/map.png',
+                width: 100,
+              ),
             ),
             const SizedBox(width: 10),
             Column(
@@ -22,17 +33,17 @@ class LocationCard extends StatelessWidget {
               children: [
                 Text(
                   "Your Location",
-                  style: Theme.of(context).textTheme.titleLarge!.copyWith(
+                  style: Theme.of(context).textTheme.headline6!.copyWith(
                         color: Theme.of(context).primaryColor,
                       ),
                 ),
                 const SizedBox(height: 5),
                 Text(
-                  "United States, New York",
-                  style: Theme.of(context).textTheme.labelLarge,
-                )
+                  "Andhra Pradesh, Bhimavaram",
+                  style: Theme.of(context).textTheme.subtitle1,
+                ),
               ],
-            )
+            ),
           ],
         ),
       ),

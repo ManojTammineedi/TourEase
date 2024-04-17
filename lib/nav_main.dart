@@ -2,6 +2,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:tourease/home.dart';
 import 'package:tourease/nav.dart';
+import 'package:tourease/pages/feedback_page.dart';
+import 'package:tourease/pages/setting_part.dart';
 
 // import 'package:roomates/components/bus/setting.dart';
 // import 'package:roomates/components/feedback.dart';
@@ -161,16 +163,16 @@ class _iNavigationDrawerState extends State<iNavigationDrawer> {
         //     context, MaterialPageRoute(builder: (context) => SOSPage()));
         break;
       case 4:
-        // Navigator.push(
-        //     context, MaterialPageRoute(builder: (context) => FeedbackPage()));
+        Navigator.push(context,
+            MaterialPageRoute(builder: (context) => RatingFeedbackScreen()));
         break;
       case 5:
         // Navigator.push(
         //     context, MaterialPageRoute(builder: (context) => About()));
         break;
       case 6:
-        // Navigator.push(
-        //     context, MaterialPageRoute(builder: (context) => setting()));
+        Navigator.push(
+            context, MaterialPageRoute(builder: (context) => SettingsScreen()));
         break;
     }
   }

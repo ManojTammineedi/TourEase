@@ -1,5 +1,6 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:tourease/Introduction_Screens/splash_screen.dart';
 import 'package:tourease/auth/otp_/phone.dart';
 import 'package:tourease/auth/otp_/verify.dart';
 import 'package:tourease/firebase_options.dart';
@@ -21,9 +22,10 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      initialRoute: 'auth',
+      initialRoute: 'splash', // Set an initial route
       routes: {
-        'auth': (context) => AuthPage(), // Define your authentication page
+        'splash': (context) => SplashScreen(),
+       'auth': (context) => AuthPage(), // Define your authentication page
         'verify': (context) => MyVerify(),
         'phone': (context) => MyPhone(), // Define your verification page
         'home': (context) => HomePage(),

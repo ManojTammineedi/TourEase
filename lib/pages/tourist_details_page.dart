@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:ionicons/ionicons.dart';
+import 'package:tourease/current_location.dart';
+import 'package:tourease/pages/OrderTrackingPage.dart';
 import 'package:tourease/pages/guides_page.dart';
 
 import 'package:tourease/widget/distance.dart';
@@ -164,21 +166,32 @@ class TouristDetailsPage extends StatelessWidget {
                 children: [
                   Text(
                     description,
-                    style: TextStyle(fontSize: 14),
+                    style: TextStyle(fontSize: 16),
                   )
                   // Your other content, like the image, can be added here
                 ],
               ),
             ),
-            Container(
-              height: 180,
-              width: double.maxFinite,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(15),
-                color: Theme.of(context).colorScheme.secondary.withOpacity(0.1),
-                image: const DecorationImage(
-                  image: AssetImage('lib/images/map.png'),
-                  fit: BoxFit.cover,
+            GestureDetector(
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) =>
+                          OrderTrackingPage()), // Navigate to NewPage()
+                );
+              },
+              child: Container(
+                height: 180,
+                width: double.maxFinite,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(15),
+                  color:
+                      Theme.of(context).colorScheme.secondary.withOpacity(0.1),
+                  image: const DecorationImage(
+                    image: AssetImage('lib/images/map.png'),
+                    fit: BoxFit.cover,
+                  ),
                 ),
               ),
             ),

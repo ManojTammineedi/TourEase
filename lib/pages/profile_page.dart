@@ -207,7 +207,8 @@ class _ProfilePageState extends State<ProfilePage> {
               title,
               style: TextStyle(
                 fontSize: 15,
-                fontWeight: FontWeight.w500,
+                fontWeight: FontWeight.w800,
+                fontFamily: 'Bold-Poppins',
                 color: Colors.black,
               ),
             ),
@@ -216,8 +217,17 @@ class _ProfilePageState extends State<ProfilePage> {
             ),
             Container(
               width: 350,
-              height: 40,
+              height: 45,
               decoration: BoxDecoration(
+                boxShadow: [
+                  BoxShadow(
+                    color: Color.fromARGB(255, 163, 212, 237)
+                        .withOpacity(0.1), // Shadow color
+                    spreadRadius: 1, // Spread radius
+                    blurRadius: 4, // Blur radius
+                    offset: Offset(0, 2), // Offset from the top
+                  ),
+                ],
                 border: Border(
                   bottom: BorderSide(
                     color: Colors.grey,
@@ -244,6 +254,8 @@ class _ProfilePageState extends State<ProfilePage> {
                           style: TextStyle(
                             fontSize: 16,
                             height: 1.4,
+                            fontFamily: 'Poppins',
+                            fontWeight: FontWeight.w600,
                             color: Colors.grey,
                           ),
                         ),
@@ -272,6 +284,7 @@ class _ProfilePageState extends State<ProfilePage> {
               'About',
               style: TextStyle(
                 fontSize: 15,
+                fontFamily: 'Bold-Poppins',
                 fontWeight: FontWeight.w500,
                 color: Colors.black,
               ),
@@ -300,6 +313,8 @@ class _ProfilePageState extends State<ProfilePage> {
                               user.aboutMeDescription,
                               style: TextStyle(
                                   fontSize: 16,
+                                  fontWeight: FontWeight.w600,
+                                  fontFamily: 'Poppins',
                                   height: 1.4,
                                   color: Colors.grey),
                             ),

@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
@@ -19,9 +20,7 @@ class LoginPage extends StatefulWidget {
 class _LoginPageState extends State<LoginPage> {
   // text editing controllers
   final emailController = TextEditingController();
-
   final passwordController = TextEditingController();
-
   // sign user in method
   void signUserIn() async {
     //show loading circle
@@ -52,6 +51,22 @@ class _LoginPageState extends State<LoginPage> {
       //pop the loading circle
       Navigator.pop(context);
     } on FirebaseAuthException catch (e) {
+      // try {
+      //   UserCredential userCredential =
+      //       await _firebaseAuth.signInWithEmailAndPassword(
+      //     email: email,
+      //     password: password,
+      //   );
+
+      //   _firestore.collection('users').doc(userCredential.user!.uid).set({
+      //     'uid': userCredential.user!.uid,
+      //     'email': email,
+      //   });
+      //   // Pop the loading circle on success
+      //   Navigator.pop(context);
+      //   //pop the loading circle
+      //   Navigator.pop(context);
+      // } on FirebaseAuthException catch (e) {
       //pop the loading circle
       Navigator.pop(context);
       //wrong email
@@ -126,10 +141,10 @@ class _LoginPageState extends State<LoginPage> {
         body: Container(
       decoration: BoxDecoration(
         gradient: LinearGradient(colors: [
-          Color.fromARGB(255, 209, 194, 118),
-          Color.fromARGB(255, 126, 195, 135),
-          Color.fromARGB(255, 175, 163, 56),
-          Color.fromARGB(255, 117, 90, 159)
+          Color.fromARGB(255, 0, 116, 166),
+          Color.fromARGB(255, 0, 160, 176),
+          Color.fromARGB(255, 0, 197, 176),
+          Color.fromARGB(255, 87, 209, 197)
         ], begin: Alignment.topLeft, end: Alignment.bottomRight),
       ),
       child: Scaffold(

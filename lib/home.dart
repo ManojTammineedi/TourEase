@@ -1,12 +1,18 @@
+import 'dart:async';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:ionicons/ionicons.dart';
+import 'package:tourease/current_location.dart';
 import 'package:tourease/nav_main.dart';
+import 'package:tourease/pages/live_safe.dart';
 import 'package:tourease/pages/profile_page.dart';
+import 'package:tourease/user/user.dart';
+import 'package:tourease/user/user_data.dart';
+import 'package:tourease/view_full.dart';
 import 'package:tourease/widget/custom_icon_button.dart';
 import 'package:tourease/widget/location_card.dart';
 import 'package:tourease/widget/nearby_places.dart';
 import 'package:tourease/widget/recommended_places.dart';
-import 'package:tourease/widget/tourist_places.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -16,6 +22,32 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  late StreamSubscription<DocumentSnapshot<Map<String, dynamic>>>?
+      _subscription;
+  late User_Profile _user;
+
+  @override
+  void initState() {
+    super.initState();
+
+    // Initialize user data
+    _user = UserData.myUser;
+
+    // Listen for changes to user data
+    _subscription = UserData.listenToUserChanges((User_Profile updatedUser) {
+      setState(() {
+        _user = updatedUser;
+      });
+    });
+  }
+
+  @override
+  void dispose() {
+    // Dispose of the subscription when the widget is disposed
+    UserData.disposeUserChangesListener(_subscription);
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -27,17 +59,20 @@ class _HomePageState extends State<HomePage> {
         title: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Text("Good Morning"),
+            const Text(
+              "Welcome",
+              style: TextStyle(fontFamily: 'Bold-Poppins'),
+            ),
             Text(
-              "Tetteh Jeron Asiedu",
+              _user.email,
               style: Theme.of(context).textTheme.labelMedium,
             ),
           ],
         ),
         actions: const [
-          CustomIconButton(
-            icon: Icon(Ionicons.search_outline),
-          ),
+          // CustomIconButton(
+          //   icon: Icon(Ionicons.search_outline),
+          // ),
           Padding(
             padding: EdgeInsets.only(left: 8.0, right: 12),
             child: CustomIconButton(
@@ -46,16 +81,26 @@ class _HomePageState extends State<HomePage> {
           ),
         ],
       ),
+      
       body: ListView(
         physics: const BouncingScrollPhysics(),
         padding: const EdgeInsets.all(14),
         children: [
+          SearchBar(
+            hintText: "Search",
+            padding: MaterialStateProperty.all<EdgeInsets>(
+                const EdgeInsets.symmetric(horizontal: 15)),
+            leading: const Icon(Icons.search),
+            elevation: MaterialStateProperty.all<double>(0),
+            // trailing: const [Icon(Icons.mic)],
+          ),
           // LOCATION CARD
           const LocationCard(),
+
           const SizedBox(
             height: 15,
           ),
-          const TouristPlaces(),
+          LiveSafe(),
           // CATEGORIES
           const SizedBox(height: 10),
           Row(
@@ -65,7 +110,10 @@ class _HomePageState extends State<HomePage> {
                 "Recommendation",
                 style: Theme.of(context).textTheme.titleLarge,
               ),
-              TextButton(onPressed: () {}, child: const Text("View All"))
+              TextButton(
+                  onPressed: () => Navigator.of(context).push(
+                      MaterialPageRoute(builder: (context) => ViewFull())),
+                  child: const Text("View All"))
             ],
           ),
           const SizedBox(height: 10),
@@ -78,13 +126,17 @@ class _HomePageState extends State<HomePage> {
                 "Nearby From You",
                 style: Theme.of(context).textTheme.titleLarge,
               ),
-              TextButton(onPressed: () {}, child: const Text("View All"))
+              TextButton(
+                  onPressed: () => Navigator.of(context).push(
+                      MaterialPageRoute(builder: (context) => ViewFull())),
+                  child: const Text("View All"))
             ],
           ),
           const SizedBox(height: 10),
           const NearbyPlaces(),
         ],
       ),
+      
       bottomNavigationBar: BottomNavigationBar(
         type: BottomNavigationBarType.fixed,
         showSelectedLabels: false,
@@ -99,8 +151,8 @@ class _HomePageState extends State<HomePage> {
             label: "Bookmark",
           ),
           BottomNavigationBarItem(
-            icon: Icon(Ionicons.ticket_outline),
-            label: "Ticket",
+            icon: Icon(Ionicons.location),
+            label: "Location",
           ),
           BottomNavigationBarItem(
             icon: Icon(Ionicons.person_outline),
@@ -108,6 +160,11 @@ class _HomePageState extends State<HomePage> {
           )
         ],
         onTap: (int index) {
+          
+          if (index == 2) {
+            Navigator.of(context)
+                .push(MaterialPageRoute(builder: (context) => UserLocation()));
+          }
           if (index == 3) {
             Navigator.of(context)
                 .push(MaterialPageRoute(builder: (context) => ProfilePage()));

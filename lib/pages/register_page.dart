@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
@@ -20,7 +21,8 @@ class _RegisterPageState extends State<RegisterPage> {
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
   final confirmPasswordController = TextEditingController();
-
+  final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   // sign user up method
   void signUserUp() async {
     String email = emailController.text;
@@ -53,11 +55,16 @@ class _RegisterPageState extends State<RegisterPage> {
     );
 
     try {
-      await FirebaseAuth.instance.createUserWithEmailAndPassword(
+      UserCredential userCredential =
+          await _firebaseAuth.createUserWithEmailAndPassword(
         email: email,
         password: password,
       );
 
+      _firestore.collection('users').doc(userCredential.user!.uid).set({
+        'uid': userCredential.user!.uid,
+        'email': email,
+      });
       // Pop the loading circle on success
       Navigator.pop(context);
     } on FirebaseAuthException catch (e) {
@@ -119,10 +126,10 @@ class _RegisterPageState extends State<RegisterPage> {
         body: Container(
       decoration: BoxDecoration(
         gradient: LinearGradient(colors: [
-          Color.fromARGB(255, 7, 123, 224),
-          Color.fromARGB(255, 125, 88, 212),
-          Color.fromARGB(255, 18, 217, 144),
-          Color.fromARGB(255, 214, 225, 58)
+          Color.fromARGB(255, 0, 116, 166),
+          Color.fromARGB(255, 0, 160, 176),
+          Color.fromARGB(255, 0, 197, 176),
+          Color.fromARGB(255, 87, 209, 197)
         ], begin: Alignment.topLeft, end: Alignment.bottomRight),
       ),
       child: Scaffold(
@@ -142,7 +149,7 @@ class _RegisterPageState extends State<RegisterPage> {
                   // ),
                   // ignore: prefer_const_constructors
                   Text(
-                    'HRTC',
+                    'TourEase',
                     // ignore: prefer_const_constructors
                     style: TextStyle(
                       color: Color.fromARGB(255, 255, 255, 255),
